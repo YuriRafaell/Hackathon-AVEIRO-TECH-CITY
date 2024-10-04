@@ -66,11 +66,42 @@ de 7 dias, ou seja, no dia N, teremos acesso aos conteúdos até ao dia N-7.
 • Player de conteúdos - será disponibilizado um Player para reprodução de playlists de
 conteúdos da oferta MEO TV.
 
+# Nossa ideia
+
+## Descrição do desafio
+O desafio propõe desenvolver novas formas de interação com a TV, utilizando APIs que
+melhoram a experiência do espectador. A ideia é criar soluções inovadoras para o consumo
+de conteúdos, explorando metadados, transcrições e recomendações personalizadas
+através das APIs Electronic Program Guide (EPG) e Media Dive, promovendo uma
+experiência televisiva mais envolvente e interativa.
+
+## Estratégia
+A estratégia da equipa é desenvolver um sistema de reconhecimento personalizado para
+TV, utilizando JavaScript e React com Vite para criar a interface. Criámos uma base de
+dados para armazenar perfis de utilizadores (personas) e as suas preferências, de forma a
+fornecer sugestões de conteúdo personalizadas, com base em metadados ricos fornecidos
+pela API Media Dive. Mesmo que o sistema não funcione com transmissões ao vivo,
+utilizaremos o conteúdo disponível com um atraso de 20 minutos. A integração com a API
+do Electronic Program Guide (EPG) e o uso da API Program Covers garantem que o
+utilizador tenha uma experiência de visualização rica e conteúdo recomendado de forma
+inteligente e adaptada aos seus gostos pessoais.
+
+## Ideias para a proposta de solução
+A proposta é criar um sistema que utilize as APIs disponíveis para criar uma experiência de
+visualização personalizada. Cada utilizador terá um perfil (persona) baseado nas suas
+preferências, e o sistema recomendará conteúdos de TV com um atraso de 20 minutos em
+relação à transmissão em direto. A API Media Dive será utilizada para enriquecer os
+programas com transcrição e palavras-chave, permitindo recomendações mais precisas e
+relevantes. Além disso, o sistema será visualmente apelativo graças à integração da API
+Program Covers, que exibirá imagens dos programas sugeridos. Embora não haja
+transmissão em direto, esta abordagem permite que o conteúdo recente seja explorado de
+forma personalizada, maximizando a utilidade de metadados ricos.
+
 ### O que precisa ser entregue
 
-[ ] Relatório sucinto da abordagem ao problema, com máximo de 2 páginas 19h00 DO DIA 02/10
+[X] Relatório sucinto da abordagem ao problema, com máximo de 2 páginas 19h00 DO DIA 02/10
 
-[ ] Sumário Executivo, em pdf com o máximo de 2 páginas 17h30 DO DIA 04/10
+[X] Sumário Executivo, em pdf com o máximo de 2 páginas 17h30 DO DIA 04/10
 
 [ ] Apresentação, em ppt 17h30 DO DIA 04/10
 

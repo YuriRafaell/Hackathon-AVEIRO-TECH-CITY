@@ -1,0 +1,1201 @@
+openapi: 3.1.0
+info:
+  title: Media Dive API
+  description: This API allows an external application to interact with Media Dive solution to carry out various operations
+    <li>Looking up advertising blocks
+    <li>Browse thumbnails classified by various criteria
+    <li>Summarising text as well as associated keywords and topics
+    <li>Subtitle production
+    <li>Search text in video
+    <li>Identify unique faces
+  version: 4.2.0
+servers:
+  - url: https://mediadive.poc.alticelabs.com/pubblocks
+    description: Media Dive API
+tags:
+  - name: process
+  - name: streams
+  - name: thumbnails
+  - name: topics
+paths:
+  /process:
+    post:
+      tags:
+        - process
+      summary: Stream process
+      description: Given a stream, it performs video or audio analysis
+      security:
+        - BasicAuth: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                stationId:
+                  $ref: '#/components/schemas/StationId'
+                startTime:
+                  $ref: '#/components/schemas/Date'
+                endTime:
+                  $ref: '#/components/schemas/Date'
+                operation:
+                  $ref: '#/components/schemas/StreamOperation'
+                options:
+                  $ref: '#/components/schemas/StreamOptions'
+                callback:
+                  $ref: '#/components/schemas/Callback'
+              required:
+                - stationId
+                - startTime
+                - endTime
+                - operation
+                - callback
+      responses:
+        '200':
+          description: Returns the request ID 
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/RequestResponseObject'
+                  - $ref: '#/components/schemas/KeywordsResponseObject'
+                  - $ref: '#/components/schemas/TopicsResponseObject'
+                  - $ref: '#/components/schemas/SubtitlesResponseObject'
+                  - $ref: '#/components/schemas/ThumbnailsResponseObject'
+              examples:
+                Response:
+                  summary: Request response
+                  description: The response contains the request's ID
+                    <p><b><i>Synchronous response
+                  value:
+                    request: 23432
+                ProcessKeywordsCallback:
+                  summary: Callback response - Keywords
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>keywords</i> contains a list of segments and respective keywords, if any
+                  value:
+                    stationId: '327395'
+                    request: 23887
+                    programName: 'Program'
+                    startPeriod: '2024-08-06T10:00:00.100Z'
+                    endPeriod: '2024-08-06T11:00:00.100Z'
+                    keywords: 
+                      - start_segment: '2024-08-06T10:00:00.100Z'
+                        end_segment: '2024-08-06T10:10:00.100Z'
+                        keywords: 'keyword1 keyword2 keyword3 keyword4'
+                      - start_segment: '2024-08-06T10:10:00.100Z'
+                        end_segment: '2024-08-06T10:25:00.100Z'
+                        keywords: 'keyword5 keyword6'
+                      - start_segment: '2024-08-06T10:25:00.100Z'
+                        end_segment: '2024-08-06T10:40:00.100Z'
+                        keywords: 'keyword7 keyword8 keyword9'
+                      - start_segment: '2024-08-06T10:40:00.100Z'
+                        end_segment: '2024-08-06T11:00:00.100Z'
+                        keywords: 'keyword10'
+                ProcessTopicsCallback:
+                  summary: Callback response - Topic
+                  description: Request response sent via callback. 
+                    <p>List of segments with respective topic and score
+                  value:
+                    example:
+                      - start_segment: '2024-08-06T10:00:00.100Z'
+                        end_segment: '2024-08-06T10:10:00.100Z'
+                        description: 'Education'
+                        score: 5.43
+                      - start_segment: '2024-08-06T10:10:00.100Z'
+                        end_segment: '2024-08-06T10:25:00.100Z'
+                        description: 'Carrers'
+                        score: 1.4
+                      - start_segment: '2024-08-06T10:25:00.100Z'
+                        end_segment: '2024-08-06T10:40:00.100Z'
+                        description: 'Genres'
+                        score: 6.0
+                      - start_segment: '2024-08-06T10:40:00.100Z'
+                        end_segment: '2024-08-06T11:00:00.100Z'
+                        description: 'Events'
+                        score: 4.2
+                SubtitlesCallback:
+                  summary: Callback response - Subtitles
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>fileUrl</i> contains the download url of the subtitle file
+                  value:
+                    stationId: '327395'
+                    request: 23887
+                    startPeriod: '2024-08-06T10:00:00.100Z'
+                    endPeriod: '2024-08-06T11:00:00.100Z'
+                    fileUrl: 'https://mediadive.poc.alticelabs.com/pubblocks/subtitles/2024/08/06/RTP1_HD/RTP1_HD_2024-08-09_10_00_00__2024-08-09_11_00_00_en_37.vtt'
+                ProcessThumbnailsCallback:
+                  summary: Callback response - Thumbnails
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>thumbnails</i> contains a list of thumbnails and the corresponding urls for downloading them
+                  value:
+                    stationid: '327395'
+                    start_period: '2024-08-06T10:00:00.100Z'
+                    end_period: '2024-08-06T11:00:00.100Z'
+                    thumbnails:
+                      - date: '2024-08-06T10:00:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:20:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:35:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:41:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+        '400':
+          description: Bad request. Parameter missing or invalid parameter. 
+            <p>It's also considered a bad request if the <i>options</i> parameter doesn't contain
+            the correct properties for the selected <i>operation</i> parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'operation is INVALID'
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+  /processURL:
+    post:
+      tags:
+        - process
+      summary: URL file process
+      description: Given a url of an audio or video file, it performs video or audio analysis.
+      security:
+        - BasicAuth: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                URL:
+                  $ref: '#/components/schemas/URL'
+                operation:
+                  $ref: '#/components/schemas/URLOperation'
+                options:
+                  $ref: '#/components/schemas/URLOptions'
+                callback:
+                  $ref: '#/components/schemas/Callback'
+              required:
+                - URL
+                - operation
+                - callback
+      responses:
+        '200':
+          description: Returns the request ID 
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/RequestResponseObject'
+                  - $ref: '#/components/schemas/KeywordsResponseObject'
+                  - $ref: '#/components/schemas/SubtitlesResponseObject'
+                  - $ref: '#/components/schemas/ThumbnailsResponseObject'
+                  - $ref: '#/components/schemas/ThumbnailsUniqueFacesResponseObject'
+              examples:
+                Response:
+                  summary: Request response
+                  description: The response contains the request's ID
+                    <p><b><i>Synchronous response
+                  value:
+                    request: 23432
+                ProcessKeywordsCallback:
+                  summary: Callback response - Keywords
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>keywords</i> contains a list of segments and respective keywords, if any
+                  value:
+                    stationId: '327395'
+                    request: 23887
+                    programName: 'Program'
+                    startPeriod: '2024-08-06T10:00:00.100Z'
+                    endPeriod: '2024-08-06T11:00:00.100Z'
+                    keywords: 
+                      - start_segment: '2024-08-06T10:00:00.100Z'
+                        end_segment: '2024-08-06T10:10:00.100Z'
+                        keywords: 'keyword1 keyword2 keyword3 keyword4'
+                      - start_segment: '2024-08-06T10:10:00.100Z'
+                        end_segment: '2024-08-06T10:25:00.100Z'
+                        keywords: 'keyword5 keyword6'
+                      - start_segment: '2024-08-06T10:25:00.100Z'
+                        end_segment: '2024-08-06T10:40:00.100Z'
+                        keywords: 'keyword7 keyword8 keyword9'
+                      - start_segment: '2024-08-06T10:40:00.100Z'
+                        end_segment: '2024-08-06T11:00:00.100Z'
+                        keywords: 'keyword10'
+                SubtitlesCallback:
+                  summary: Callback response - Subtitles
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>fileUrl</i> contains the download url of the subtitle file
+                  value:
+                    stationId: '327395'
+                    request: 23887
+                    startPeriod: '2024-08-06T10:00:00.100Z'
+                    endPeriod: '2024-08-06T11:00:00.100Z'
+                    fileUrl: 'https://mediadive.poc.alticelabs.com/pubblocks/subtitles/2024/08/06/RTP1_HD/RTP1_HD_2024-08-09_10_00_00__2024-08-09_11_00_00_en_37.vtt'
+                ProcessThumbnailsCallback:
+                  summary: Callback response - Thumbnails
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>thumbnails</i> contains a list of thumbnails and the corresponding urls for downloading them
+                  value:
+                    stationid: '327395'
+                    start_period: '2024-08-06T10:00:00.100Z'
+                    end_period: '2024-08-06T11:00:00.100Z'
+                    thumbnails:
+                      - date: '2024-08-06T10:00:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:20:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:35:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:41:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                ProcessUniqueFacesCallback:
+                  summary: Callback response - Unique Faces
+                  description: Request response sent via callback. 
+                    <p>The parameter <i>thumbnails</i> contains a list of thumbnails and the corresponding urls for downloading them
+                  value:
+                    stationid: '327395'
+                    start_period: '2024-08-06T10:00:00.100Z'
+                    end_period: '2024-08-06T11:00:00.100Z'
+                    thumbnails:
+                      - date: '2024-08-06T10:00:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:20:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:35:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                      - date: '2024-08-06T10:41:00.100Z'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+        '400':
+          description: Bad request. Parameter missing or invalid parameter. 
+            <p>It's also considered a bad request if the <i>options</i> parameter doesn't contain
+            the correct properties for the selected <i>operation</i> parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'operation is INVALID'
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+  /streams:
+    get:
+      tags:
+        - streams
+      summary: Gather results
+      description: Returns a list of advertising blocks for a given station id (if there are no ads matching the filter criteria, an empty list is returned)
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: stationId
+          in: query
+          description: Station ID representing a stream
+          required: true
+          schema:
+            $ref: '#/components/schemas/StationId'
+        - name: startTime
+          in: query
+          description: Indicates the period from which you want to obtain information. If not filled in, the current time minus 24 hours is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: endTime
+          in: query
+          description: Indicates the period up to which the blocks are to be obtained. If not filled in, the current time of the current day is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+      responses:
+        '200':
+          description: Advertising blocks list 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    stationid:
+                      type: integer
+                      description: Station ID representing a stream 
+                    start_period:
+                      type: string
+                      description: Request's start time
+                    end_period:
+                      type: string
+                      description: Request's end time
+                    blocks:
+                      type: array
+                      description: list of advertising blocks
+                      items:
+                        type: object
+                        properties:
+                          start:
+                            type: string
+                            description: Ad block start time
+                            examples: 
+                              - '2015-03-12T11:15:00+0000'
+                          end:
+                            type: string
+                            description: Ad block end time
+                            examples: 
+                              - '2015-03-12T11:15:00+0000'
+                examples:
+                  - stationid: '123456'
+                    start_period: '2015-03-12T11:12:00+0000'
+                    end_period: '2015-03-13T11:12:00+0000'
+                    blocks:
+                      - start: '2015-03-12T11:15:00+0000'
+                        end: '2015-03-13T11:22:00+0000'
+                      - start: '2015-03-12T13:15:00+0000'
+                        end: '2015-03-13T13:22:00+0000'
+        '400':
+          description: Bad request. Parameter missing or invalid parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'Station Id is MANDATORY'  
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+  /thumbnails:
+    get:
+      tags:
+        - thumbnails
+      summary: Gather results
+      description: Returns a list of thumbnails for a given station id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: stationId
+          in: query
+          description: Station ID representing a stream
+          required: true
+          schema:
+            $ref: '#/components/schemas/StationId'
+        - name: startTime
+          in: query
+          description: Indicates the period from which you want to obtain information. If not filled in, the current time minus 24 hours is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: endTime
+          in: query
+          description: Indicates the period up to which the blocks are to be obtained. If not filled in, the current time of the current day is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: limit
+          in: query
+          description: Indicates the maximum number of images to return
+          required: false
+          schema:
+            $ref: '#/components/schemas/Limit'
+        - name: criteria
+          in: query
+          description: Indicates the selection criteria. 
+            <p>&nbsp;
+            <p>There are 4 values, each corresponding to a different criteria
+            <li><b>1 -</b> Default by the system (takes into account the sharpness of the image as well as the presence of faces with open eyes)
+            <li><b>2 -</b> Same as default, but decreases ranking of images where subtitles are found 
+            <li><b>3 -</b> Rank by faces (takes into account the number of faces in the image)
+            <li><b>4 -</b> Big faces (highlights images with faces that take up more than 15% of the screen)
+            <p>&nbsp;
+            <p>The API has 2 different modes of operation. Per default it uses parameter limit to divide the interval of the request in <i>limit x 2</i> segments and get best 
+              image of each of those segments, then it selects the best limit images from the segment's images. You can activate another function, where it will return the best 
+              image of each person that participated in the requested interval. You add 1000 to the criteria it should use to pick best image for the person it identifies. Ex 1004 
+              list the persons found, rank images by size of faces in them.
+            <p>&nbsp;
+          required: false
+          schema:
+            $ref: '#/components/schemas/ThumbnailsCriteria'
+      responses:
+        '200':
+          description: Thumbnails list 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThumbnailsResponseObject'
+        '400':
+          description: Bad request. Parameter missing or invalid parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'Station Id is MANDATORY'  
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+  /thumbnailtext:
+    get:
+      tags:
+        - thumbnails
+      summary: Gather results
+      description: Returns a thumbnail list with text for a given station id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: stationId
+          in: query
+          description: Station ID representing a stream
+          required: true
+          schema:
+            $ref: '#/components/schemas/StationId'
+        - name: startTime
+          in: query
+          description: Indicates the period from which you want to obtain information. If not filled in, the current time minus 24 hours is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: endTime
+          in: query
+          description: Indicates the period up to which the blocks are to be obtained. If not filled in, the current time of the current day is taken into account. UTC time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: limit
+          in: query
+          description: Indicates the maximum number of images to return
+          required: false
+          schema:
+            $ref: '#/components/schemas/Limit'
+        - name: criteria
+          in: query
+          description: Indicates the selection criteria
+            <li><b>0</b> - Return all texts
+            <li><b>1</b> - Groups equal texts (lowest date)
+            <p>&nbsp;
+          required: false
+          schema:
+            $ref: '#/components/schemas/ThumbnailsCriteriaText'
+        - name: text
+          in: query
+          description: Text to search
+          required: false
+          schema:
+            type: string
+            description: Text to search
+      responses:
+        '200':
+          description: Thumbnails list 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stationid:
+                    type: integer
+                    description: Station ID representing a stream 
+                  start_period:
+                    type: string
+                    description: Request's start time
+                  end_period:
+                    type: string
+                    description: Request's end time
+                  thumbnails:
+                    type: array
+                    description: List of thumbnails
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          $ref: '#/components/schemas/Date'
+                        URL:
+                          $ref: '#/components/schemas/DiprURL'
+                        text:
+                          $ref: '#/components/schemas/ThumbnailsCriteriaText'
+                examples:
+                  - stationid: '123456'
+                    start_period: '2015-03-12T11:12:00+0000'
+                    end_period: '2015-03-13T11:12:00+0000'
+                    thumbnails:
+                      - date: '2020-03-24T11:14:30+0000'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                        text: 'Placeholder!'
+                      - date: '2020-03-24T11:17:00+0000'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                        text: 'Placeholder!'
+                      - date: '2020-03-24T11:24:10+0000'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                        text: 'Placeholder!'
+                      - date: '2020-03-24T11:37:00+0000'
+                        URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+                        text: 'Placeholder!'
+        '400':
+          description: Bad request. Parameter missing or invalid parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'Station Id is MANDATORY'  
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+  /topics/internal:
+    get:
+      tags:
+        - topics
+      summary: Gather results
+      description: Returns the list of inference topics based on the IAB taxonomy, version 2.2
+      security:
+        - BasicAuth: []
+      responses:
+        '200':
+          description: Internal topics list 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      description: Topic description
+                examples:
+                  -
+                    - description: 'Attractions'
+                    - description: 'Automotive'
+                    - description: 'Communication'
+                    - description: 'Events'
+                    - description: 'Family and Relationships'
+                    - description: 'Genres'
+                    - description: 'Healthy Living'
+                    - description: 'Disasters'
+                    - description: 'Education'
+                    - description: 'Careers'
+                    - description: 'Entertainment'
+                    - description: 'Fine Art'
+                    - description: 'Holidays'
+                    - description: 'Maps & Navigation'
+                    - description: 'Home & Garden'
+                    - description: 'Hobbies & Interests'
+                    - description: 'Personal Celebrations & Life Events'
+  /topics:
+    get:
+      tags:
+        - topics
+      summary: Gather results
+      description: Returns the list of inference topics according to the conditions of the requested parameters
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: stationId
+          in: query
+          description: Station ID representing a stream
+          required: true
+          schema:
+            $ref: '#/components/schemas/StationId'
+        - name: startTime
+          in: query
+          description: Indicates the period from which you want to obtain the topics. UTC time.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: endTime
+          in: query
+          description: Indicates the period up to which you want to obtain the topics. UTC time.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: search
+          in: query
+          description: Filter the search according to the past topic search. If it's not filled in, I'll return it without any top-level filter. Only topics obtained by this request are accepted
+          required: false
+          schema:
+            type: string
+            examples: 
+              - 'Science'
+      responses:
+        '200':
+          description: Topic list 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stationId:
+                    type: integer
+                    description: Station ID representing a stream 
+                  start_period:
+                    type: string
+                    description: Request's start time
+                  end_period:
+                    type: string
+                    description: Request's end time
+                  search:
+                    type: string
+                    description: Topic used to search
+                  topicPercentage:
+                    type: array
+                    description: list of topics and their percentages within the requested time range
+                    items:
+                      type: object
+                      properties:
+                        description:
+                          $ref: '#/components/schemas/TopicDescription'
+                        percentage:
+                          type: number
+                          description: Topic's percentage within the requested time range 
+                  topicSegmentGroup:
+                    type: array
+                    description: List of thumbnails
+                    items:
+                      type: object
+                      properties:
+                        start_period:
+                          $ref: '#/components/schemas/Date'
+                        end_period:
+                          $ref: '#/components/schemas/Date'
+                        description:
+                          $ref: '#/components/schemas/TopicDescription'
+                        n_segments:
+                          type: integer
+                          description: Number of segments found
+              examples:
+                NoSearch:
+                  summary: Without topic to search
+                  description: Example of a response without a topic to search. 
+                    <p>The parameter <i>search</i> is null.
+                  value:
+                    stationid: '123456'
+                    start_period: '2022-12-16T01:00:00Z'
+                    end_period: '2022-12-16T01:30:00Z'
+                    search: null
+                    topicPercentage:
+                      - description: 'Education'
+                        percentage: 44.4
+                      - description: 'Careers'
+                        percentage: 22.2
+                      - description: 'Entertainment'
+                        percentage: 33.3
+                    topicSegmentGroup:
+                      - start_period: '2022-12-16 01:00:00.0'
+                        end_period: '2022-12-16 01:10:00.0'
+                        description: 'Education'
+                        n_segments: 3
+                      - start_period: '2022-12-16 01:10:50.0'
+                        end_period: '2022-12-16 01:16:45.0'
+                        description: 'Education'
+                        n_segments: 2
+                      - start_period: '2022-12-16 01:17:00.0'
+                        end_period: '2022-12-16 01:26:00.0'
+                        description: 'Entertainment'
+                        n_segments: 3
+                      - start_period: '2022-12-16 01:26:40.0'
+                        end_period: '2022-12-16 01:30:00.0'
+                        description: 'Education'
+                        n_segments: 1
+                TopicSearch:
+                  summary: Using topic to search
+                  description: Example of a response using a topic to filter
+                    <p>The parameter <i>search</i> contains the search item
+                    <p>The parameter <i>topicPercentage</i> is not included
+                  value:
+                    stationid: '123456'
+                    start_period: '2022-12-16T01:00:00Z'
+                    end_period: '2022-12-16T01:30:00Z'
+                    search: 'Education'
+                    topicSegmentGroup:
+                      - start_period: '2022-12-16 01:00:00.0'
+                        end_period: '2022-12-16 01:10:00.0'
+                        description: 'Education'
+                        n_segments: 3
+                      - start_period: '2022-12-16 01:26:40.0'
+                        end_period: '2022-12-16 01:30:00.0'
+                        description: 'Education'
+                        n_segments: 1
+        '400':
+          description: Bad request. Parameter missing or invalid parameter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Response status code
+                  message: 
+                    type: string
+                    description: Error message
+                examples:
+                  - code: 400
+                    message: 'Station Id is MANDATORY'  
+        '500':
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Error description
+                examples:
+                  - reason: 'Internal server error'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    URL:
+      type: string
+      description: File URL
+      examples: 
+        - 'https://mediadive.poc.alticelabs.com/hls-download/files/video_file.mp4'
+    StationId:
+      type: string
+      description: Station ID representing a stream 
+      examples: 
+        - '327392'
+    Request:
+      type: integer
+      description: Request's ID
+      examples: 
+        - 23432
+    Date:
+      type: string
+      description: String's representation of date. UTC time.
+      examples: 
+        - '2024-08-06T10:00:10.100Z'
+    StreamOperation:
+      type: string
+      description: What operation we want to execute
+        <li><b>PROCESSKEYWORDS:</b> Generate text's keywords
+        <li><b>PROCESSTOPIC:</b> Generate text's topics
+        <li><b>PROCESSSUBTITLES:</b> Creation of subtitle files
+        <li><b>THUMBRANKING:</b> Ranking images
+        <p>&nbsp;
+      enum:
+        - PROCESSKEYWORDS
+        - PROCESSTOPIC
+        - PROCESSSUBTITLES
+        - THUMBRANKING
+      examples: 
+        - 'PROCESSTOPIC'
+    URLOperation:
+      type: string
+      description: What operation we want to execute
+        <li><b>PROCESSKEYWORDS:</b> Generate text's keywords
+        <li><b>PROCESSSUBTITLES:</b> Creation of subtitle files
+        <li><b>THUMBRANKING:</b> Ranking images
+        <li><b>THUMBUNIQUEFACESCLUSTER:</b> Clustering faces
+        <p>&nbsp;
+      enum:
+        - PROCESSKEYWORDS
+        - PROCESSSUBTITLES
+        - THUMBRANKING
+        - THUMBUNIQUEFACESCLUSTER
+      examples: 
+        - 'PROCESSSUBTITLES'
+    StreamOptions:
+      type: string
+      description: It consists on an object with additional parameters for the process. Each operation has his own options.
+        <p><b>PROCESSKEYWORDS</b>
+        <li>No options
+        <p><b>PROCESSTOPIC</b>
+        <li>No options
+        <p><b>PROCESSSUBTITLES</b>
+        <li><b>max_char:</b> Length of each subtitle (mandatory)
+        <li><b>format:</b> file format (srt, vtt) (mandatory)
+        <li><b>language:</b> subtitle's language (mandatory)
+        <p><b>THUMBRANKING</b>
+        <li><b>limit:</b> maximum number of images (mandatory)
+        <li><b>criteria:</b> criteria to obtain images (mandatory)
+        <p>&nbsp;
+      examples: 
+        - '{"max_char":"37", "language": "pt", "format": "vtt"}'
+    URLOptions:
+      type: string
+      description: It consists on an object with additional parameters for the process. Each operation has his own options.
+        <p><b>PROCESSKEYWORDS</b>
+        <li>No options
+        <p><b>PROCESSSUBTITLES</b>
+        <li><b>max_char:</b> Length of each subtitle (mandatory)
+        <li><b>format:</b> file format (srt, vtt) (mandatory)
+        <li><b>language:</b> subtitle's language (mandatory)
+        <p><b>THUMBRANKING</b>
+        <li><b>limit:</b> maximum number of images (mandatory)
+        <li><b>criteria:</b> criteria to obtain images (mandatory)
+        <p><b>THUMBUNIQUEFACESCLUSTER</b>
+        <li><b>limit:</b> maximum number of images (mandatory)
+        <li><b>criteria:</b> criteria to obtain images (mandatory)
+        <p>&nbsp;
+      examples: 
+        - '{"max_char":"37", "language": "pt", "format": "vtt"}'
+    Callback:
+      type: string
+      description: URL that indicates where the results should be sent
+      examples: 
+        - 'http://example.com/response'
+    Limit:
+      type: integer
+      description: Indicates the maximum number of images to return
+      minimum: 0
+      examples: 
+        - 10
+    DiprURL:
+      type: string
+      description: Thumbnail's image
+      examples: 
+        - 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+    ThumbnailsCriteria:
+      type: integer
+      description: Indicates the selection criteria. 
+        <p>&nbsp;
+        <p>There are 4 values, each corresponding to a different criteria
+        <li><b>1 -</b> Default by the system (takes into account the sharpness of the image as well as the presence of faces with open eyes)
+        <li><b>2 -</b> Same as default, but decreases ranking of images where subtitles are found
+        <li><b>3 -</b> Rank by faces (takes into account the number of faces in the image)
+        <li><b>4 -</b> Big faces (highlights images with faces that take up more than 15% of the screen)
+        <p>&nbsp;
+        <p>The API has 2 different modes of operation. Per default it uses parameter limit to divide the interval of the request in <i>limit x 2</i> segments and get best 
+          image of each of those segments, then it selects the best limit images from the segment's images. You can activate another function, where it will return the best 
+          image of each person that participated in the requested interval. You add 1000 to the criteria it should use to pick best image for the person it identifies. Ex 1004 
+          list the persons found, rank images by size of faces in them.
+        <p>&nbsp;
+      minimum: 0
+      examples: 
+        - 1002
+    ThumbnailsCriteriaText:
+      type: integer
+      description: Indicates the selection criteria
+        <li><b>0</b> - Return all texts
+        <li><b>1</b> - Groups equal texts (lowest date)
+        <p>&nbsp;
+      enum:
+        - 0
+        - 1
+    TopicDescription:
+      type: string
+      description: Topic's description
+      examples: 
+        - 'Education'
+    RequestResponseObject:
+      type: object
+      description: Request response
+      properties:
+        request:
+          type: integer
+          description: Request ID
+          examples: 
+            - 232432
+      examples:
+        - request: 23432
+    SubtitlesResponseObject:
+      type: object
+      description: Subtitle processing response
+      properties:
+        stationId:
+          $ref: '#/components/schemas/StationId' 
+        request:
+          $ref: '#/components/schemas/Request'
+        startPeriod:
+          $ref: '#/components/schemas/Date'
+        endPeriod:
+          $ref: '#/components/schemas/Date'
+        fileUrl:
+          $ref: '#/components/schemas/URL'
+      examples:
+        - stationId: '327395'
+          request: 23887
+          startPeriod: '2024-08-06T10:00:00.100Z'
+          endPeriod: '2024-08-06T11:00:00.100Z'
+          fileUrl: 'https://mediadive.poc.alticelabs.com/pubblocks/subtitles/2024/08/06/RTP1_HD/RTP1_HD_2024-08-09_10_00_00__2024-08-09_11_00_00_en_37.vtt'
+    KeywordsResponseObject:
+      type: object
+      description: Keywords processing response
+      properties:
+        stationId:
+          $ref: '#/components/schemas/StationId' 
+        request:
+          $ref: '#/components/schemas/Request'
+        programName:
+          type: string
+          examples: 
+            - 'Program name'
+        startPeriod:
+          $ref: '#/components/schemas/Date'
+        endPeriod:
+          $ref: '#/components/schemas/Date'
+        keywords:
+          type: array
+          description: List of segments and their keywords
+          items:
+            type: object
+            properties:
+              start_segment:
+                $ref: '#/components/schemas/Date'
+              end_segment:
+                $ref: '#/components/schemas/Date'
+              keywords:
+                type: string
+                description: Keyword list separated by spaces 
+                examples: 
+                  - 'keyword1 keyword2 keyword3 keyword4'
+      examples:
+        - stationId: '327395'
+          request: 23887
+          programName: 'Program'
+          startPeriod: '2024-08-06T10:00:00.100Z'
+          endPeriod: '2024-08-06T11:00:00.100Z'
+          keywords: 
+            - start_segment: '2024-08-06T10:00:00.100Z'
+              end_segment: '2024-08-06T10:10:00.100Z'
+              keywords: 'keyword1 keyword2 keyword3 keyword4'
+            - start_segment: '2024-08-06T10:10:00.100Z'
+              end_segment: '2024-08-06T10:25:00.100Z'
+              keywords: 'keyword5 keyword6'
+            - start_segment: '2024-08-06T10:25:00.100Z'
+              end_segment: '2024-08-06T10:40:00.100Z'
+              keywords: 'keyword7 keyword8 keyword9'
+            - start_segment: '2024-08-06T10:40:00.100Z'
+              end_segment: '2024-08-06T11:00:00.100Z'
+              keywords: 'keyword10'
+    TopicsResponseObject:
+      type: array
+      description: Topics processing response
+      items:
+        properties:
+          start_segment:
+            $ref: '#/components/schemas/Date'
+          end_segment:
+            $ref: '#/components/schemas/Date'
+          description:
+            type: string
+            description: Topic's description
+            examples: 
+              - 'Education'
+          score:
+            type: number
+            description: Topic's score
+            examples: 
+              - 2.3
+      examples:
+        -
+          - start_segment: '2024-08-06T10:00:00.100Z'
+            end_segment: '2024-08-06T10:10:00.100Z'
+            description: 'Education'
+            score: 5.43
+          - start_segment: '2024-08-06T10:10:00.100Z'
+            end_segment: '2024-08-06T10:25:00.100Z'
+            description: 'Carrers'
+            score: 1.4
+          - start_segment: '2024-08-06T10:25:00.100Z'
+            end_segment: '2024-08-06T10:40:00.100Z'
+            description: 'Genres'
+            score: 6.0
+          - start_segment: '2024-08-06T10:40:00.100Z'
+            end_segment: '2024-08-06T11:00:00.100Z'
+            description: 'Events'
+            score: 4.2
+    ThumbnailsResponseObject:
+      type: object
+      properties:
+        stationid:
+          type: integer
+          description: Station ID representing a stream 
+        start_period:
+          type: string
+          description: Request's start time
+        end_period:
+          type: string
+          description: Request's end time
+        thumbnails:
+          type: array
+          description: List of thumbnails
+          items:
+            type: object
+            properties:
+              date:
+                $ref: '#/components/schemas/Date'
+              URL:
+                $ref: '#/components/schemas/DiprURL'
+      examples:
+        - stationid: '327395'
+          start_period: '2024-08-06T10:00:00.100Z'
+          end_period: '2024-08-06T11:00:00.100Z'
+          thumbnails:
+            - date: '2024-08-06T10:00:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:20:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:35:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:41:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+    ThumbnailsUniqueFacesResponseObject:
+      type: object
+      properties:
+        stationid:
+          type: integer
+          description: Station ID representing a stream 
+        start_period:
+          type: string
+          description: Request's start time
+        end_period:
+          type: string
+          description: Request's end time
+        thumbnails:
+          type: array
+          description: List of thumbnails
+          items:
+            type: object
+            properties:
+              date:
+                $ref: '#/components/schemas/Date'
+              URL:
+                $ref: '#/components/schemas/DiprURL'
+      examples:
+        - stationid: '327395'
+          start_period: '2024-08-06T10:00:00.100Z'
+          end_period: '2024-08-06T11:00:00.100Z'
+          thumbnails:
+            - date: '2024-08-06T10:00:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:20:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:35:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+            - date: '2024-08-06T10:41:00.100Z'
+              URL: 'https://mediadive.poc.alticelabs.com/pubblocks/thumbnails/path/to/image.png'
+  parameters:
+    url:
+      name: URL
+      in: query
+      description: File URL
+      schema:
+        $ref: '#/components/schemas/URL'
+    stationId:
+      name: stationId
+      in: query
+      description: Station Id
+      schema:
+        $ref: '#/components/schemas/StationId'
+    startTime:
+      name: startTime
+      in: query
+      description: Start Time
+      schema:
+        $ref: '#/components/schemas/Date'
+    endTime:
+      name: endTime
+      in: query
+      description: End Time
+      schema:
+        $ref: '#/components/schemas/Date'
+    operation:
+      name: operation
+      in: query
+      schema:
+        oneOf:
+          - $ref: '#/components/schemas/StreamOperation'
+          - $ref: '#/components/schemas/URLOperation'
+    options:
+      name: options
+      in: query
+      schema:
+        oneOf:
+          - $ref: '#/components/schemas/StreamOptions'
+          - $ref: '#/components/schemas/URLOptions'
+    callback:
+      name: callback
+      in: query
+      schema:
+        $ref: '#/components/schemas/Callback' 
+    criteria:
+      name: criteria
+      in: query
+      schema:
+        $ref: '#/components/schemas/ThumbnailsCriteriaText'

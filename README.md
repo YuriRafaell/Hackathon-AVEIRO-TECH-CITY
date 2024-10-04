@@ -66,45 +66,32 @@ de 7 dias, ou seja, no dia N, teremos acesso aos conteúdos até ao dia N-7.
 • Player de conteúdos - será disponibilizado um Player para reprodução de playlists de
 conteúdos da oferta MEO TV.
 
-# Nossa ideia
+# Pitch do Projeto: StreamLy
 
-## Descrição do desafio
-O desafio propõe desenvolver novas formas de interação com a TV, utilizando APIs que
-melhoram a experiência do espectador. A ideia é criar soluções inovadoras para o consumo
-de conteúdos, explorando metadados, transcrições e recomendações personalizadas
-através das APIs Electronic Program Guide (EPG) e Media Dive, promovendo uma
-experiência televisiva mais envolvente e interativa.
+## Visão Geral
+O TV Interativa é uma plataforma inovadora que transforma a forma como os espectadores interagem com seus programas favoritos, utilizando APIs para criar uma experiência televisiva envolvente e personalizada. Diante da evolução das mídias e das crescentes expectativas dos consumidores, nossa solução visa melhorar a experiência de visualização, oferecendo conteúdos enriquecidos e recomendações personalizadas através das APIs Electronic Program Guide (EPG) e Media Dive.
 
-## Estratégia
-A estratégia da equipa é desenvolver um sistema de reconhecimento personalizado para
-TV, utilizando JavaScript e React com Vite para criar a interface. Criámos uma base de
-dados para armazenar perfis de utilizadores (personas) e as suas preferências, de forma a
-fornecer sugestões de conteúdo personalizadas, com base em metadados ricos fornecidos
-pela API Media Dive. Mesmo que o sistema não funcione com transmissões ao vivo,
-utilizaremos o conteúdo disponível com um atraso de 20 minutos. A integração com a API
-do Electronic Program Guide (EPG) e o uso da API Program Covers garantem que o
-utilizador tenha uma experiência de visualização rica e conteúdo recomendado de forma
-inteligente e adaptada aos seus gostos pessoais.
+## Público-Alvo
+Nosso público-alvo são telespectadores que buscam uma maneira mais dinâmica e adaptada de consumir conteúdos televisivos. Focamos em pessoas que desejam uma experiência interativa, com recomendações personalizadas e acesso a metadados ricos que ampliam a compreensão e apreciação dos programas assistidos.
 
-## Ideias para a proposta de solução
-A proposta é criar um sistema que utilize as APIs disponíveis para criar uma experiência de
-visualização personalizada. Cada utilizador terá um perfil (persona) baseado nas suas
-preferências, e o sistema recomendará conteúdos de TV com um atraso de 20 minutos em
-relação à transmissão em direto. A API Media Dive será utilizada para enriquecer os
-programas com transcrição e palavras-chave, permitindo recomendações mais precisas e
-relevantes. Além disso, o sistema será visualmente apelativo graças à integração da API
-Program Covers, que exibirá imagens dos programas sugeridos. Embora não haja
-transmissão em direto, esta abordagem permite que o conteúdo recente seja explorado de
-forma personalizada, maximizando a utilidade de metadados ricos.
+## Funcionalidades Principais
 
-### O que precisa ser entregue
+- Recomendações Personalizadas: Com base nas preferências do usuário, o sistema oferece sugestões de programas adaptadas ao seu gosto, utilizando dados metadados da API Media Dive.
+Transcrições e Palavras-chave: Cada programa é acompanhado por transcrições e palavras-chave, facilitando a navegação e a compreensão do conteúdo.
 
-[X] Relatório sucinto da abordagem ao problema, com máximo de 2 páginas 19h00 DO DIA 02/10
+- Interface Atraente: Utilizando JavaScript e React com Vite, a plataforma apresenta uma interface intuitiva que melhora a interação do usuário com o conteúdo.
+Benefícios
 
-[X] Sumário Executivo, em pdf com o máximo de 2 páginas 17h30 DO DIA 04/10
+- Experiência Personalizada: A plataforma oferece uma experiência de visualização adaptada, reduzindo o tempo de busca por conteúdos relevantes e aumentando a satisfação do espectador.
+Acesso a Conteúdos Enriquecidos: Com metadados e transcrições, os usuários têm uma visão mais profunda dos programas, facilitando discussões e análises.
 
-[ ] Apresentação, em ppt 17h30 DO DIA 04/10
+- Aproveitamento do Conteúdo: Mesmo sem transmissões ao vivo, o sistema proporciona acesso a conteúdos relevantes com um atraso de 20 minutos, permitindo uma interação contínua com a programação.
 
-[ ] Link para o repositório de código 17h30 DO DIA 04/10
+## Diferenciais
+O TV Interativa se destaca por sua abordagem centrada no usuário, que combina recomendações personalizadas com uma interface visualmente atraente e rica em informações. Ao integrar dados da API EPG e Media Dive, garantimos que o usuário tenha acesso a uma experiência de visualização diferenciada, alinhada às suas preferências.
 
-[ ] Pitch em MD, PDF e ppt 17h30 DO DIA 04/10
+## Planos Futuros
+Nosso plano inclui a expansão da plataforma para incluir conteúdos de diferentes redes e canais, além de funcionalidades como notificações personalizadas sobre novos conteúdos e interações em tempo real. Estamos comprometidos em aprimorar continuamente a plataforma, buscando sempre formas de enriquecer a experiência do usuário.
+
+## Conclusão
+O TV Interativa não é apenas uma nova forma de assistir TV; é uma plataforma que transforma a experiência de consumo de conteúdo, tornando-a mais envolvente e personalizada. Convidamos você a explorar nosso projeto e descobrir como podemos reinventar sua maneira de interagir com a televisão.

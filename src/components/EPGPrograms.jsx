@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getEPGPrograms } from '../services/epgApi';
-import { getProgramCover } from '../services/imageApi'; // Importar a função para obter a capa
+import { getProgramCover } from '../services/imageApi'; 
 
 const EPGPrograms = () => {
     const [programs, setPrograms] = useState([]);
